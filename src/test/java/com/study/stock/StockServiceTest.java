@@ -42,10 +42,9 @@ public class StockServiceTest {
     }
 
     @Test
-    @Transactional
-    public void 동시의_100개의_요청() {
+    public void 동시의_100개의_요청() throws InterruptedException {
         int threadCount = 100;
-        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
+        ExecutorService executorService = Executors.newFixedThreadPool(32);
         CountDownLatch countDownLatch = new CountDownLatch(threadCount);
 
         for (int i = 0; i < threadCount; i++) {
@@ -58,9 +57,12 @@ public class StockServiceTest {
             });
         }
 
+        countDownLatch.await();
         // 예상은 0개 이지만 실제 카운트는 0개가 아니게 됨 !
+        // Race Condition 2개 이상의 스레드가 공유 되는 자원에 접근을 함
         // Race Condition 이 발생 하게 됨 공유 된 자원에 여러 스레드가 접근을 하게 됨 (DB 에서 값을 업데이트 하기 전에 값을 Select 를 함 !)
         Stock stock = stockRepository.findById(1L).orElseThrow();
+
         Assertions.assertEquals(0L, stock.getQuantity());
     }
 }
