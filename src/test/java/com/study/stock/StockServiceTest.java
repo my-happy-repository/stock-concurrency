@@ -2,6 +2,7 @@ package com.study.stock;
 
 import com.study.stock.domain.Stock;
 import com.study.stock.repository.StockRepository;
+import com.study.stock.service.PessimisticLockStockService;
 import com.study.stock.service.StockService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
@@ -23,6 +24,9 @@ public class StockServiceTest {
 
     @Autowired
     private StockRepository stockRepository;
+
+    @Autowired
+    private PessimisticLockStockService pessimisticLockStockService;
 
     @BeforeEach
     public void before() {
@@ -50,6 +54,8 @@ public class StockServiceTest {
         for (int i = 0; i < threadCount; i++) {
             executorService.submit(() -> {
                 try {
+                    // perssimisticLock 을 사용 !
+//                    pessimisticLockStockService.decrease(1L, 1L);
                     stockService.decrease(1L, 1L);
                 } finally {
                     countDownLatch.countDown();
