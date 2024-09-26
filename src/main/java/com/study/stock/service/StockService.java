@@ -3,6 +3,7 @@ package com.study.stock.service;
 import com.study.stock.domain.Stock;
 import com.study.stock.repository.StockRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StockService {
@@ -13,7 +14,9 @@ public class StockService {
         this.stockRepository = stockRepository;
     }
 
-    public void decrease(Long id, Long quantity) {
+    // synchronized 키워드를 사용 시 1개의 스레드만 접근이 가능함 !
+//    @Transactional  // Transactional Annotaion !
+    public synchronized void decrease(Long id, Long quantity) {
         // 1. Stock 을 조회
         Stock stock = stockRepository.findById(id).orElseThrow();
 
