@@ -64,7 +64,6 @@ public class OptimisticLockServiceTest {
                 }
             });
         }
-
         countDownLatch.await();
         // 예상은 0개 이지만 실제 카운트는 0개가 아니게 됨 !
         // Race Condition 2개 이상의 스레드가 공유 되는 자원에 접근을 함

@@ -13,6 +13,7 @@ public class OptimisticLockStockFacade {
     }
 
     public void decrease(Long id, Long quantity) throws InterruptedException {
+        // Update 를 하였을 시 실패 시 While 문을 감 싸줌
         while(true) {
             try {
                 optimisticLockStockService.decrease(id, quantity);
@@ -22,5 +23,4 @@ public class OptimisticLockStockFacade {
             }
         }
     }
-
 }
