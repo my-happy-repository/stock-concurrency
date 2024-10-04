@@ -1,7 +1,8 @@
 package com.study.stock;
 
 import com.study.stock.domain.Stock;
-import com.study.stock.facade.NamedLockStockFacade;
+import com.study.stock.facade.LettuceLockStockFacade;
+import com.study.stock.facade.OptimisticLockStockFacade;
 import com.study.stock.repository.StockRepository;
 import com.study.stock.service.StockService;
 import org.junit.jupiter.api.AfterEach;
@@ -16,7 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @SpringBootTest
-public class StockServiceTest {
+public class LettuceLockStockServiceTest {
 
     @Autowired
     private StockService stockService;
@@ -25,7 +26,7 @@ public class StockServiceTest {
     private StockRepository stockRepository;
 
     @Autowired
-    private NamedLockStockFacade namedLockStockFacade;
+    private LettuceLockStockFacade lettuceLockStockFacade;
 
     @BeforeEach
     public void before() {
@@ -40,7 +41,6 @@ public class StockServiceTest {
     @Test
     public void 재고감소() {
         stockService.decrease(1L, 1L);
-
         Stock stock = stockRepository.findById(1L).orElseThrow();
         Assertions.assertEquals(99L, stock.getQuantity());
     }
@@ -54,9 +54,12 @@ public class StockServiceTest {
         for (int i = 0; i < threadCount; i++) {
             executorService.submit(() -> {
                 try {
-                    // perssimisticLock 을 사용 !
-//                    pessimisticLockStockService.decrease(1L, 1L);
-                    namedLockStockFacade.decrease(1L, 1L);
+                    // Lettuce 룰 사용하여 구현 시 장점은 구현이 단순하고
+                    // 단점은 spin lock 을 사용하여 Lock 을 하므로 Redis 에 너무 많은 부하를 줄 수 있음 !
+                    lettuceLockStockFacade.decrease(1L, 1L);
+
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 } finally {
                     countDownLatch.countDown();
                 }
@@ -68,8 +71,6 @@ public class StockServiceTest {
         // Race Condition 2개 이상의 스레드가 공유 되는 자원에 접근을 함
         // Race Condition 이 발생 하게 됨 공유 된 자원에 여러 스레드가 접근을 하게 됨 (DB 에서 값을 업데이트 하기 전에 값을 Select 를 함 !)
         Stock stock = stockRepository.findById(1L).orElseThrow();
-
         Assertions.assertEquals(0L, stock.getQuantity());
     }
 }
-

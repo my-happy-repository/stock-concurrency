@@ -17,7 +17,9 @@ public class StockService {
     // synchronized 키워드를 사용 시 1개의 스레드만 접근이 가능함 !
 //    @Transactional  // Transactional Annotaion !
     // Synchronized 로는 해결이 힘듦 ! 서버 2대 이상일 시 작동이 정상적으로 되지 않음 !
-    public synchronized void decrease(Long id, Long quantity) {
+//    public synchronized void decrease(Long id, Long quantity) {
+     @Transactional
+     public void decrease(Long id, Long quantity) {
         // 1. Stock 을 조회
         Stock stock = stockRepository.findById(id).orElseThrow();
 

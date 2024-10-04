@@ -3,7 +3,7 @@ spring:
     name: stock
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate.hibernate.dialect: org.hibernate.dialect.MySQLDialect
@@ -14,3 +14,9 @@ spring:
     username: root
     password: 1234
     url: jdbc:mysql://localhost:3306/stock_example?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    hikari:
+      maximum-pool-size: 40
+  data:
+    redis:
+      port: 6379
+      host: localhost
