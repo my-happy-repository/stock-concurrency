@@ -12,3 +12,8 @@
 #### 메타 데이터로 Lock 을 걸어버림 
 #### 이름을 가진 Lock 을 획득 후 다른 세션은 해당 자원에 접근이 불가, 해제를 수동으로 해주어야 함
 
+### Redisson 을 활용 한 Pub / Sub 을 구현
+#### 테스트 시 2개의 redis-cli 커맨더가 필요 (1개는 Subscribe 용 / 1 개는 Publish 용)
+
+#### 1. 특정 채널을 Subscribe subscribe ch1
+#### 2. 특정 채널에 Publish 메세지 전송 publish ch1 Hello

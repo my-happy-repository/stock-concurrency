@@ -18,6 +18,7 @@ public class NamedLockStockFacade {
         this.stockService = stockService;
     }
 
+    // Redis 에 setnx 명령어를 활용
     @Transactional
     public void decrease(Long id, Long quantity) {
         try {

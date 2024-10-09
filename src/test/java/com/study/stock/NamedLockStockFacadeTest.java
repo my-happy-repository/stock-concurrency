@@ -44,6 +44,7 @@ public class NamedLockStockFacadeTest {
         Assertions.assertEquals(99L, stock.getQuantity());
     }
 
+    // TODO - 왜 작동하지 않을까 .. ?! 확인이 필요함 !!!!
     @Test
     public void 동시의_100개의_요청() throws InterruptedException {
         int threadCount = 100;
