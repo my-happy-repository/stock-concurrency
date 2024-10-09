@@ -17,3 +17,6 @@
 
 #### 1. 특정 채널을 Subscribe subscribe ch1
 #### 2. 특정 채널에 Publish 메세지 전송 publish ch1 Hello
+
+### 재시도가 필요한 케이스는 주로 Redisson 을 사용 (Redis 에 부하가 덜 가게 됨)
+### 재시도가 필요하지 않은 케이스는 보통 Redis 를 사용 (재시도가 필요하지 않은 Lock 은 Lettuce 를 사용 !)
